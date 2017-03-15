@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TinyApp</title>
+  </head>
+  <body>
+    <header>
+    <% include partials/_header %>
+    </header>
+    <ul>
+        <% for (let prop in urls) { %>
+          <li>
+            <a href="#">
+              <%= prop %> - <%= urls[prop] %>
+            </a>
+          </li>
+          <form method="POST" action="/urls/<%= prop %>/delete">
+          <button type="submit"><a href="/urls/<%= prop %>">Edit</a></button>
+          <button type="submit">Delete</button>
+          </form>
+        <% }; %>
+    </ul>
+  </body>
+</html>
