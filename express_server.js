@@ -16,6 +16,19 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
+const users = {
+  "apple": {
+    id: "apple",
+    email: "apple@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "banana": {
+    id: "banana",
+    email: "banana@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
@@ -92,6 +105,14 @@ app.post("/logout", (req, res) => {
   let userName = req.body.username;
   res.clearCookie("username", userName);
   res.redirect("/");
+});
+
+app.get("/register", (req, res) => {
+  res.render("urls_register")
+});
+
+app.post("/register", (req, res) => {
+  res.render("urls_register")
 });
 
 function generateRandomString(length, chars) {
