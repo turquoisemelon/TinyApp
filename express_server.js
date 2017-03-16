@@ -117,18 +117,18 @@ app.post("/register", (req, res) => {
   let newUserEmail = req.body.email;
   let newUserPassword = req.body.password;
   if(newUserEmail === "") {
-    return res.status(404).send("Oh uh, something went wrong");
+    return res.status(400).send("Oh uh, something went wrong");
   } else if (newUserPassword === "") {
-    return res.status(404).send("Oh uh, something went wrong");
+    return res.status(400).send("Oh uh, something went wrong");
   } else {
     newUser = {"id":randomID , "email": newUserEmail, "password": newUserPassword};
   }
-  users[randomID] = newUser;
   for (id in users) {
     if(users[id]["email"] === newUserEmail) {
-      return res.status(404).send("Oh uh, something went wrong");
+      return res.status(400).send("User already exists");
     }
   }
+  users[randomID] = newUser;
   res.cookie("user_id", randomID);
   res.redirect("/");
 });
