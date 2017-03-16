@@ -112,7 +112,15 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  res.render("urls_register")
+  let randomID = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  let newUser = {};
+  let newUserEmail = req.body.email;
+  let newUserPassword = req.body.password;
+  newUser = {"id":randomID , "email": newUserEmail, "password": newUserPassword};
+  users[randomID] = newUser;
+  res.cookie("user_id", randomID);
+  console.log(users);
+  res.redirect("/")
 });
 
 function generateRandomString(length, chars) {
