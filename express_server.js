@@ -57,24 +57,41 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   let user_id = req.cookies["user_id"];
   let user = users[user_id];
+  // let urlObjs = {};
+  // for (let urlKey in urlDatabase) {
+  //   urlObjs[urlKey] = {
+  //     shortUrl: urlDatabase[urlKey].shortURL,
+  //     longURL: urlDatabase[urlKey].longURL,
+  //     userId: urlDatabase[urlKey].userId,
+  //     ownedByCurrentUser: user_id == urlDatabase[urlKey].userId
+  //   }
+  // }
 
-  let urlObjs = {};
+  if (req.cookies["user_id"] in users) {
+    let templateVars = {
+      urls: urlsForUser(req.cookies["user_id"]),
+      user: user
+    };
+    res.render("urls_index", templateVars);
+  } else {
+    return res.status(400).send("Please login or register first");
+  }
+});
+
+function urlsForUser(id) {
+  let filteredObj = {};
   for (let urlKey in urlDatabase) {
-    urlObjs[urlKey] = {
+    if(id === urlDatabase[urlKey].userId) {
+    filteredObj[urlKey] = {
       shortUrl: urlDatabase[urlKey].shortURL,
       longURL: urlDatabase[urlKey].longURL,
       userId: urlDatabase[urlKey].userId,
-      ownedByCurrentUser: user_id == urlDatabase[urlKey].userId
+      ownedByCurrentUser: id == urlDatabase[urlKey].userId
     }
   }
-
-  let templateVars = {
-    urls : urlObjs,
-    user: user
-  };
-  console.log(req.cookies);
-  res.render("urls_index", templateVars);
-});
+  return filteredObj;
+  }
+}
 
 app.get("/urls/new", (req, res) => {
   let user_id = req.cookies["user_id"];
@@ -122,7 +139,7 @@ app.post("/urls/:id/delete", (req, res) => {
     delete urlDatabase[req.params.id];
     res.redirect("/urls");
   } else {
-    return res.status(400).send("Something went wrong")
+    return res.status(400).send("Something went wrong");
   }
 });
 
@@ -142,9 +159,6 @@ app.post("/login", (req, res) => {
     }
   }
     return res.status(403).send("Username or password is not correct");
-  // console.log(user_id)
-  // if (neverFoundUser) {
-  // }
 });
 
 app.post("/logout", (req, res) => {
