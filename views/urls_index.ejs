@@ -12,12 +12,16 @@
         <% for (let prop in urls) { %>
           <li>
             <a href="#">
-              <%= prop %> - <%= urls[prop] %>
+              <%= prop %> - <%= JSON.stringify(urls[prop].longURL) %>
             </a>
           </li>
           <form method="POST" action="/urls/<%= prop %>/delete">
+          <% if (urls[prop].ownedByCurrentUser) {%>
           <button type="submit"><a href="/urls/<%= prop %>">Edit</a></button>
-          <button type="submit">Delete</button>
+          <% } %>
+          <% if (urls[prop].ownedByCurrentUser) {%>
+            <button type="submit">Delete</button>
+          <% } %>
           </form>
         <% }; %>
     </ul>
