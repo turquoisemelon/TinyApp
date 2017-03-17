@@ -63,10 +63,11 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     user: user
   };
-  res.render("urls_new", templateVars);
-  console.log(user_id);
-  console.log(user);
-  console.log(templateVars);
+  if (req.cookies["user_id"] in users) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -81,6 +82,7 @@ app.get("/urls/:id", (req, res) => {
     user: user
   };
   res.render("urls_show", templateVars);
+    console.log(templateVars);
 });
 
 app.post("/urls", (req, res) => {

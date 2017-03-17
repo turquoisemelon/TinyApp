@@ -1,0 +1,53 @@
+[33mcommit e664e93f6234b195af792afd76fb3b8d7a8bae62[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Fri Mar 17 01:17:51 2017 +0000
+
+    tinyapp user registration step task 10, 11,12 completed
+
+[33mcommit bc6f4810b1ecaf7977d785d935ef0c6f7f8e4d83[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Fri Mar 17 00:40:17 2017 +0000
+
+    task 9 completed, login page and its code set
+
+[33mcommit 25a39471c6c7158bc678bc46c6355115229de941[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Thu Mar 16 22:10:01 2017 +0000
+
+    steps till task 8 of user registration(tinyapp)
+
+[33mcommit 6560407cbc314e9736fb64db1ad1e8aa3dde4ad2[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Thu Mar 16 19:04:52 2017 +0000
+
+    a bug for already existing user check has been fixed
+
+[33mcommit 65458328511db8fbdd0feafdd89e5ae8fb0ed9cb[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Thu Mar 16 18:06:34 2017 +0000
+
+    if/else statements and for loop added to handle registration errors-task 5 of w2d4
+
+[33mcommit 499e80932db85b489366bc112f06f54d6b7bf104[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Thu Mar 16 16:56:45 2017 +0000
+
+    Registration handle has been created
+
+[33mcommit 695dbbfeb4d36bb0cc23910a96b13286876d0a5e[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Thu Mar 16 16:28:03 2017 +0000
+
+    registration page and users object has been created
+
+[33mcommit 5cf920586614adf8f06dbed8078975c90f1cdb5a[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Thu Mar 16 15:45:53 2017 +0000
+
+    cookies added
+
+[33mcommit 1b42d8c69899435e635e385c1c28266cde9c3750[m
+Author: meltem kilic <melltemkilic@gmail.com>
+Date:   Wed Mar 15 22:35:52 2017 +0000
+
+    work done so far
