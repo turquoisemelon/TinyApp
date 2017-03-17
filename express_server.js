@@ -112,8 +112,6 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  // let userName = req.body.username;
-  // res.cookie("username", userName);
   let userEmail = req.body.email;
   let userPassword = req.body.password;
   for (key in users) {
@@ -124,15 +122,15 @@ app.post("/login", (req, res) => {
       }
     }
   }
-    return res.status(403).send("This username or password doesn't exist");
+    return res.status(403).send("Username or password is not correct");
   // console.log(user_id)
   // if (neverFoundUser) {
   // }
 });
 
 app.post("/logout", (req, res) => {
-  let userName = req.body.username;
-  res.clearCookie("username", userName);
+  let user_id = req.body["user_id"];
+  res.clearCookie("user_id", user_id);
   res.redirect("/");
 });
 
