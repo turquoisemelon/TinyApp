@@ -64,6 +64,9 @@ app.get("/urls/new", (req, res) => {
     user: user
   };
   res.render("urls_new", templateVars);
+  console.log(user_id);
+  console.log(user);
+  console.log(templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -104,10 +107,27 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
+app.get("/login", (req, res) => {
+  res.render("urls_login")
+});
+
 app.post("/login", (req, res) => {
-  let userName = req.body.username;
-  res.cookie("username", userName);
-  res.redirect("/urls");
+  // let userName = req.body.username;
+  // res.cookie("username", userName);
+  let userEmail = req.body.email;
+  let userPassword = req.body.password;
+  for (key in users) {
+    if(users[key]["email"] === userEmail) {
+      if(users[key]["password"] === userPassword) {
+        res.cookie("user_id", key);
+        return res.redirect("/");
+      }
+    }
+  }
+    return res.status(403).send("This username or password doesn't exist");
+  // console.log(user_id)
+  // if (neverFoundUser) {
+  // }
 });
 
 app.post("/logout", (req, res) => {
@@ -138,6 +158,8 @@ app.post("/register", (req, res) => {
     }
   }
   users[randomID] = newUser;
+  console.log('REGISTERED ID', randomID);
+  console.log('USERS', users);
   res.cookie("user_id", randomID);
   res.redirect("/");
 });
