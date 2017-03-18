@@ -1,7 +1,7 @@
-var express = require("express");
-var cookieParser = require('cookie-parser');
-var app = express();
-var PORT = process.env.PORT || 8080; // default port 8080
+const express = require("express");
+const cookieParser = require('cookie-parser');
+const app = express();
+const PORT = process.env.PORT || 8080; // default port 8080
 const morgan = require('morgan');
 const bcrypt = require('bcrypt');
 
@@ -12,7 +12,7 @@ app.use(cookieParser());
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-var urlDatabase = {
+let urlDatabase = {
   "b2xVn2": {
     shortURL: "b2xVn2",
     longURL: "http://www.lighthouselabs.ca",
@@ -25,7 +25,7 @@ var urlDatabase = {
   }
 };
 
-const users = {
+let users = {
   "apple": {
     id: "apple",
     email: "apple@example.com",
@@ -121,7 +121,7 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  var a = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  let a = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   urlDatabase[a] = {
     shortURL: a,
     longURL:req.body.longURL,
@@ -153,7 +153,7 @@ app.post("/login", (req, res) => {
   let userPassword = req.body.password;
   for (key in users) {
     if(users[key]["email"] === userEmail) {
-      if(users[key]["password"] === userPassword) {
+      if(bcrypt.compareSync(userPassword, users[key]["password"]) === true) {
         res.cookie("user_id", key);
         return res.redirect("/");
       }
@@ -175,7 +175,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   let randomID = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   let newUser = {};
-  let newUserEmail = req.body.email;
+  const newUserEmail = req.body.email;
   const newUserPassword = req.body.password;
   const newUserHashedPassword = bcrypt.hashSync(newUserPassword, 10);
   if(newUserEmail === "") {
@@ -198,8 +198,8 @@ app.post("/register", (req, res) => {
 });
 
 function generateRandomString(length, chars) {
-  var result = "";
-  for (var i = length; i > 0; --i) {
+  let result = "";
+  for (var i = length; i > 0; i--) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
  return result;
