@@ -3,6 +3,7 @@ var cookieParser = require('cookie-parser');
 var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
 const morgan = require('morgan');
+const bcrypt = require('bcrypt');
 
 app.set("view engine", "ejs");
 app.use(morgan('dev'));
@@ -175,13 +176,14 @@ app.post("/register", (req, res) => {
   let randomID = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   let newUser = {};
   let newUserEmail = req.body.email;
-  let newUserPassword = req.body.password;
+  const newUserPassword = req.body.password;
+  const newUserHashedPassword = bcrypt.hashSync(newUserPassword, 10);
   if(newUserEmail === "") {
     return res.status(400).send("Oh uh, something went wrong");
   } else if (newUserPassword === "") {
     return res.status(400).send("Oh uh, something went wrong");
   } else {
-    newUser = {"id":randomID , "email": newUserEmail, "password": newUserPassword};
+    newUser = {"id":randomID , "email": newUserEmail, "password": newUserHashedPassword};
   }
   for (id in users) {
     if(users[id]["email"] === newUserEmail) {
