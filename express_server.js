@@ -1,5 +1,4 @@
 const express = require("express");
-// const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const app = express();
 const PORT = process.env.PORT || 8080; // default port 8080
@@ -51,8 +50,15 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  let user_id = req.session["user_id"];
+  let user = users[user_id];
+  if (req.session["user_id"] in users) {
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login");
+  }
 });
+  // res.end("Hello!");
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -65,6 +71,8 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   // let user_id = req.cookies["user_id"];
   let user_id = req.session["user_id"];
+  console.log(req.session)
+  console.log(req.session["user_id"]);
   let user = users[user_id];
 
   // if (req.cookies["user_id"] in users) {
@@ -76,7 +84,7 @@ app.get("/urls", (req, res) => {
     };
     res.render("urls_index", templateVars);
   } else {
-    return res.status(400).send("Please login or register first");
+    res.status(400).send("Please login or register first");
   }
 });
 
@@ -149,7 +157,7 @@ app.post("/urls/:id/delete", (req, res) => {
     delete urlDatabase[req.params.id];
     res.redirect("/urls");
   } else {
-    return res.status(400).send("Something went wrong");
+    res.status(400).send("Something went wrong");
   }
 });
 
@@ -160,21 +168,22 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let userEmail = req.body.email;
   let userPassword = req.body.password;
-  for (key in users) {
+  for (var key in users) {
     if(users[key]["email"] === userEmail) {
+      console.log(userPassword);
+      console.log(users[key]["password"]);
       if(bcrypt.compareSync(userPassword, users[key]["password"]) === true) {
         // res.cookie("user_id", key);
         req.session["user_id"] = key;
-        return res.redirect("/");
+        res.redirect("/");
       }
     }
   }
-    return res.status(403).send("Username or password is not correct");
+    res.status(403).send("Username or password is not correct");
 });
 
 app.post("/logout", (req, res) => {
-  let user_id = req.body["user_id"];
-  res.clearCookie("user_id", user_id);
+  res.clearCookie("session");
   res.redirect("/");
 });
 
@@ -189,15 +198,15 @@ app.post("/register", (req, res) => {
   const newUserPassword = req.body.password;
   const newUserHashedPassword = bcrypt.hashSync(newUserPassword, 10);
   if(newUserEmail === "") {
-    return res.status(400).send("Oh uh, something went wrong");
+    res.status(400).send("Oh uh, something went wrong");
   } else if (newUserPassword === "") {
-    return res.status(400).send("Oh uh, something went wrong");
+    res.status(400).send("Oh uh, something went wrong");
   } else {
     newUser = {"id":randomID , "email": newUserEmail, "password": newUserHashedPassword};
   }
   for (id in users) {
     if(users[id]["email"] === newUserEmail) {
-      return res.status(400).send("User already exists");
+      res.status(400).send("User already exists");
     }
   }
   users[randomID] = newUser;
