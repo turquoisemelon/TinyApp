@@ -87,7 +87,6 @@ app.post("/urls", (req, res) => {
     longURL:req.body.longURL,
     // userId: req.cookies["user_id"]};
     userId: req.session["user_id"]};
-  console.log(urlDatabase);
   res.redirect("http://localhost:8080/urls/" + id);
 });
 
@@ -95,15 +94,15 @@ function urlsForUser(id) {
   let filteredObj = {};
   for (let urlKey in urlDatabase) {
     if(id === urlDatabase[urlKey].userId) {
-    filteredObj[urlKey] = {
-      shortUrl: urlDatabase[urlKey].shortURL,
-      longURL: urlDatabase[urlKey].longURL,
-      userId: urlDatabase[urlKey].userId,
-      ownedByCurrentUser: id == urlDatabase[urlKey].userId
+      filteredObj[urlKey] = {
+        shortUrl: urlDatabase[urlKey].shortURL,
+        longURL: urlDatabase[urlKey].longURL,
+        userId: urlDatabase[urlKey].userId,
+        ownedByCurrentUser: id == urlDatabase[urlKey].userId
+      }
     }
   }
   return filteredObj;
-  }
 }
 
 app.get("/urls/new", (req, res) => {
@@ -138,6 +137,7 @@ app.get("/urls/:id", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   console.log(req.params);
   console.log(req.params.shortURL);
+  console.log(urlDatabase);
   console.log(urlDatabase[req.params.shortURL]);
   let longURL = urlDatabase[req.params.shortURL]["longURL"];
   res.redirect(longURL);
