@@ -16,12 +16,15 @@
             </a>
           </li>
           <form method="POST" action="/urls/<%= prop %>/delete">
-          <% if (urls[prop].ownedByCurrentUser) {%>
-          <button type="submit"><a href="/urls/<%= prop %>">Edit</a></button>
-          <% } %>
-          <% if (urls[prop].ownedByCurrentUser) {%>
-            <button type="submit">Delete</button>
-          <% } %>
+            <% if (urls[prop].ownedByCurrentUser) {%>
+              <button type="submit"><a href="/urls/<%= prop %>">Edit</a></button>
+            <% } %>
+            <% if (urls[prop].ownedByCurrentUser) {%>
+              <button type="submit">Delete</button>
+            <% } %>
+            <% if (urls[prop].ownedByCurrentUser) {%>
+              <button type="submit"><a href="/urls/new">Create a New Short Link</a></button>
+            <% } %>
           </form>
         <% }; %>
     </ul>

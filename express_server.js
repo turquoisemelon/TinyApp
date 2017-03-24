@@ -1,7 +1,7 @@
 const express = require("express");
 const cookieSession = require('cookie-session');
 const app = express();
-const PORT = process.env.PORT || 8080; // default port 8080
+const PORT = process.env.PORT || 3000; // default port 8080
 const morgan = require('morgan');
 const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
@@ -55,10 +55,9 @@ app.get("/", (req, res) => {
   if (req.session["user_id"] in users) {
     res.redirect("/urls");
   } else {
-    res.redirect("/login");
+    res.redirect("/urls");
   }
 });
-  // res.end("Hello!");
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -76,15 +75,16 @@ app.get("/urls", (req, res) => {
   let user = users[user_id];
 
   // if (req.cookies["user_id"] in users) {
-    if (req.session["user_id"] in users) {
+  if (req.session["user_id"] in users) {
     let templateVars = {
       // urls: urlsForUser(req.cookies["user_id"]),
       urls: urlsForUser(req.session["user_id"]),
       user: user
     };
     res.render("urls_index", templateVars);
+    res.status(200);
   } else {
-    res.status(400).send("Please login or register first");
+    res.render("error", res.status(401));
   }
 });
 
@@ -95,7 +95,7 @@ app.post("/urls", (req, res) => {
     longURL:req.body.longURL,
     // userId: req.cookies["user_id"]};
     userId: req.session["user_id"]};
-  res.redirect("http://localhost:8080/urls/" + id);
+  res.redirect("http://localhost:3000/urls/" + id);
 });
 
 function urlsForUser(id) {
@@ -121,10 +121,10 @@ app.get("/urls/new", (req, res) => {
     user: user
   };
   // if (req.cookies["user_id"] in users) {
-    if (req.session["user_id"] in users) {
+  if (req.session["user_id"] in users) {
     res.render("urls_new", templateVars);
   } else {
-    res.redirect("/login");
+    res.render("error", res.status(401));
   }
 });
 
@@ -139,7 +139,15 @@ app.get("/urls/:id", (req, res) => {
     "longURL": getLongURL,
     "user": user
   };
-  res.render("urls_show", templateVars);
+  if (req.session["user_id"] in users === false) {
+    res.render("error", res.status(401));
+  } else if (req.session["user_id"] !== Object.keys(users)){
+    res.render("error", res.status(401));
+  } else if (!getShortURL) {
+    res.render("error", res.status(401));
+  } else {
+    res.render("urls_show", templateVars);
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {

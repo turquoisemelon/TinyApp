@@ -1,10 +1,14 @@
 
     <% if(!user){ %>
-      <a href="/register">Register</a>
-      <a href="/login">Login</a>
+      <form class="uselater" action="/logout" method="POST">
+        <button type="submit"><a href="/register">Register</a></button>
+        <button type="submit"><a href="/login">Login</a></button>
+      </form>
     <% } else { %>
       <p>Logged in as <%= user.email %><p>
         <form class="uselater" action="/logout" method="POST">
+          <button type="submit"><a href="/urls">My Links</a></button>
+          <button type="submit"><a href="/urls/new">Create a new link</a></button>
           <button type="submit">Logout</button>
         </form>
     <% } %>
