@@ -93,9 +93,12 @@ app.post("/urls", (req, res) => {
   urlDatabase[id] = {
     shortURL: id,
     longURL:req.body.longURL,
-    // userId: req.cookies["user_id"]};
     userId: req.session["user_id"]};
-  res.redirect("http://localhost:3000/urls/" + id);
+    if (req.session["user_id"] in users) {
+      res.redirect("http://localhost:3000/urls/" + id);
+    } else {
+      res.render("error", res.status(401));
+    }
 });
 
 function urlsForUser(id) {
@@ -127,12 +130,27 @@ app.get("/urls/new", (req, res) => {
     res.render("error", res.status(401));
   }
 });
+localhost/urls/dsalfkj
+req.params.id
+
+app.get("/urls/:id/cool/:tag")
+
+localhost/urls/:id/cool/:tag
+req.params.id = ':id'
+req.params.tag = ':tag'
+
+
+localhost/urls/6hdkxy/cool/fancy
+req.params.id = '6hdkxy'
+req.params.id = 'fancy'
 
 app.get("/urls/:id", (req, res) => {
   // let getUserId = req.cookies["user_id"];
   let getUserId = req.session["user_id"];
+  // TODO: CHeck that a hort url exists
   let getShortURL = urlDatabase[req.params.id]["shortURL"];
   let getLongURL = urlDatabase[req.params.id]["longURL"];
+
   let user = users[getUserId];
   let templateVars = {
     "shortURL": getShortURL,
@@ -141,13 +159,19 @@ app.get("/urls/:id", (req, res) => {
   };
   if (req.session["user_id"] in users === false) {
     res.render("error", res.status(401));
-  } else if (req.session["user_id"] !== Object.keys(users)){
-    res.render("error", res.status(401));
-  } else if (!getShortURL) {
-    res.render("error", res.status(401));
+  } else if (req.session["user_id"] in users === true && req.session["user_id"] !== urlDatabase[req.params.id]["userId"]) {
+    res.render("error", res.status(403));
+  } else if (req.params.id !== getShortURL) {
+    res.status(401).render("error", {});
+
   } else {
     res.render("urls_show", templateVars);
   }
+});
+
+app.post("/urls/:id", (req, res) => {
+  req.params.id = req.body["longURL"];
+  res.redirect(`/urls/${req.params.id}`);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -155,8 +179,12 @@ app.get("/u/:shortURL", (req, res) => {
   console.log(req.params.shortURL);
   console.log(urlDatabase);
   console.log(urlDatabase[req.params.shortURL]);
-  let longURL = urlDatabase[req.params.shortURL]["longURL"];
-  res.redirect(longURL);
+  let longURL = urlDatabase[req.params.shortURL]["longURL"]
+  if(longURL === urlDatabase[req.params.shortURL]["longURL"]) {
+    res.redirect(longURL);
+  } else {
+    res.status(404).send("Something went wrong");
+  }
 });
 
 app.post("/urls/:id/delete", (req, res) => {
@@ -170,7 +198,11 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("urls_login")
+  if (req.session["user_id"] in users) {
+    res.redirect("/");
+  } else {
+    res.render("urls_login", res.status(200));
+  }
 });
 
 app.post("/login", (req, res) => {
